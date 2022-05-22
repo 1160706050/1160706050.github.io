@@ -18,7 +18,8 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <a class="navbar-brand" href="/">微软身份认证平台</a>
         <div class="btn-group ml-auto dropleft">
-            <a href="https://login.microsoftonline.com/consumers/oauth2/v2.0/authorize?client_id=442aa9eb-5d1f-47db-99a2-49781b96616b&response_type=code&redirect_uri=https://1160706050.github.io/redirect.html&scope=XboxLive.signin offline_access openid email&prompt=select_account&response_mode=fragment">
+            <a
+                href="https://login.microsoftonline.com/consumers/oauth2/v2.0/authorize?client_id=442aa9eb-5d1f-47db-99a2-49781b96616b&response_type=code&redirect_uri=https://1160706050.github.io/redirect.html&scope=XboxLive.signin offline_access openid email&prompt=select_account&response_mode=fragment">
                 <button type="button" id="SignIn" class="btn btn-secondary">
                     登陆
                 </button>
@@ -46,19 +47,32 @@
 
     <script>
 
-        // 获取代码
-        var code = getQueryString("code");
-        alert(code)
-        if (code != null) {
-            var code_obj = document.getElementById("code");
-            code_obj.innerHTML = code;
+        let rawHash = window.location.hash;
+        if (rawHash !== '') {
+            // Remove the leading #
+            rawHash = rawHash.substring(1);
+        }
+        let hash = new URLSearchParams(rawHash);
+        let query = new URLSearchParams(window.location.search);
+
+        if (hash.has('error') || query.has('error')) {
+            // Error occurred
+            let errorMessage = hash.get('error') || query.get('error')
+            errorMessage += "\n\n" + (hash.get('error_description') || query.get('error_description'))
+            displayError(errorMessage);
+        } else {
+            // Get code
+            if (hash.has('code')) {
+                var code_obj = document.getElementById("code");
+                code_obj.innerHTML = hash.get('code');
+                displayCode();
+            } else {
+
+            }
         }
 
-        function getQueryString(name) {
-            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
-            var r = window.location.search.substr(1).match(reg);
-            if (r != null) return unescape(r[2]); return null;
-        }
+
+
 
 
 

@@ -47,7 +47,8 @@
     <script>
 
         // 获取代码
-        var code = getQueryString("from");
+        var code = getQueryString("code");
+        alert(code)
         if (code != null) {
             var code_obj = document.getElementById("code");
             code_obj.innerHTML = code;
